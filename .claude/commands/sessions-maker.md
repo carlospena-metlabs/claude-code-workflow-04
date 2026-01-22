@@ -12,12 +12,13 @@ Analyze the projectSpec.md and pages-tree.md files to generate a development ses
 Sessions are organized by development phases:
 
 ### Phase 1: Backend + Web Backoffice
-- Session 01: API Project Setup (NestJS)
+- Session 01: API Project Setup (NestJS + Supabase)
 - Session 02: Web Project Setup (React.js + Vite)
 - Session 03: Database Schema & Migrations
-- Session 04: Authentication Module
-- Session 05: Web Design System
-- Session 06+: Feature modules (API + Web pages)
+- Session 04: Auth Module (API)
+- Session 05: Auth Integration (Web)
+- Session 06: Web Design System
+- Session 07+: Feature modules (API + Web pages)
 
 ### Phase 2: Mobile Application (separate execution)
 - Session M01: Mobile Project Setup (React Native)
@@ -165,10 +166,12 @@ Prompt: |
 
 ```
 Session 01: API Project Setup
-    └── Initialize NestJS, configure TypeORM, setup Docker for local DB
+    └── Initialize NestJS, configure TypeORM, setup Supabase connection
+    └── Depends on: Nothing
 
 Session 02: Web Project Setup
     └── Initialize React.js + Vite, configure Tailwind, setup API client
+    └── Depends on: Nothing (can run parallel to 01)
 
 Session 03: Database Schema
     └── Create all TypeORM entities and run migrations
