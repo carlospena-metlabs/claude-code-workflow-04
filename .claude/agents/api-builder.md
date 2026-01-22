@@ -2,6 +2,51 @@
 
 Invocable agent during development sessions to implement NestJS API modules with full CRUD functionality, validation, and business logic.
 
+## Prerequisites
+
+- NestJS project initialized
+- TypeORM configured with PostgreSQL
+- Database connection configured (see Database Setup below)
+
+## Database Setup (Supabase MVP)
+
+```typescript
+// src/app.module.ts
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        url: configService.get('DATABASE_URL'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: false,  // Usar migrations
+        ssl: configService.get('NODE_ENV') === 'production'
+          ? { rejectUnauthorized: false }  // Requerido para Supabase
+          : false,
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+```bash
+# .env (MVP con Supabase)
+DATABASE_URL=postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres
+NODE_ENV=development
+
+# .env (Producción con AWS RDS)
+DATABASE_URL=postgresql://user:pass@your-rds.region.rds.amazonaws.com:5432/dbname
+NODE_ENV=production
+```
+
 ## Invocation
 
 From a session, invoke with Task tool:

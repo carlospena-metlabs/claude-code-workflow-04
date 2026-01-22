@@ -91,24 +91,23 @@ Create a `.env.example` file in the project root with:
 Example structure:
 ```bash
 # ===== API (proyecto-api) =====
-# Database
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=postgres
-DATABASE_PASSWORD=your_password
-DATABASE_NAME=project_db
+
+# Database (Supabase MVP / AWS RDS Production)
+# MVP: Get from Supabase Dashboard > Settings > Database > Connection string > URI
+DATABASE_URL=postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres
+NODE_ENV=development
 
 # JWT
-JWT_SECRET=your_jwt_secret_here
+JWT_SECRET=your_jwt_secret_here_min_32_chars
 JWT_EXPIRES_IN=7d
 
-# AWS
+# AWS (Production)
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_S3_BUCKET=your-bucket-name
 
-# Email
+# Email (optional for MVP)
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
 SMTP_USER=your_smtp_user
@@ -125,6 +124,10 @@ SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_KEY
 PRIVATE_KEY=your_deployer_private_key
 ETHERSCAN_API_KEY=your_etherscan_key
 ```
+
+**Database URLs:**
+- **MVP (Supabase):** `postgresql://postgres.[ref]:[pass]@aws-0-[region].pooler.supabase.com:6543/postgres`
+- **Production (AWS RDS):** `postgresql://user:pass@your-rds.region.rds.amazonaws.com:5432/dbname`
 
 ---
 

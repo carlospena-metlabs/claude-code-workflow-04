@@ -7,11 +7,20 @@ Workflow de Claude Code para transformar un documento SRS (Software Requirements
 | Capa | Tecnología | Proyecto |
 |------|------------|----------|
 | Backend API | NestJS (TypeScript) | proyecto-api |
-| Database | PostgreSQL (AWS RDS) | - |
+| Database | PostgreSQL (Supabase MVP → AWS RDS prod) | - |
 | Web Frontend | React.js + Vite + TailwindCSS | proyecto-web |
 | Mobile Frontend | React Native (TypeScript) | proyecto-mobile |
 | Blockchain | Solidity + Hardhat | proyecto-contracts |
 | Infraestructura | AWS (ECS, SQS, KMS, S3) | - |
+
+### Base de Datos (MVP vs Producción)
+
+```
+MVP:        Supabase PostgreSQL (gratis, 500MB)
+Producción: AWS RDS PostgreSQL (escalable, compliance)
+```
+
+La migración es solo cambiar `DATABASE_URL` - TypeORM funciona igual con ambos.
 
 ---
 
@@ -451,6 +460,53 @@ Considera crear un paquete npm compartido para tipos.
 
 ### "Los colores de mobile no coinciden con web"
 Re-ejecuta `/figma/prompt1-tokens [URL]` para regenerar los tokens en ambas plataformas desde la misma fuente.
+
+---
+
+## Configuración de Base de Datos (Supabase MVP)
+
+### 1. Crear proyecto en Supabase
+
+1. Ir a [supabase.com](https://supabase.com) y crear cuenta/proyecto
+2. Copiar la connection string desde: Settings → Database → Connection string → URI
+
+### 2. Configurar en NestJS
+
+```bash
+# proyecto-api/.env
+DATABASE_URL=postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres
+```
+
+```typescript
+// proyecto-api/src/app.module.ts
+TypeOrmModule.forRoot({
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  synchronize: false,  // NUNCA true en producción
+  ssl: { rejectUnauthorized: false },  // Requerido para Supabase
+})
+```
+
+### 3. Migrations
+
+```bash
+# Generar migration
+npm run migration:generate -- src/database/migrations/InitialSchema
+
+# Ejecutar migrations
+npm run migration:run
+```
+
+### 4. Migrar a AWS RDS (cuando escales)
+
+```bash
+# Solo cambiar DATABASE_URL
+DATABASE_URL=postgresql://user:pass@your-rds-instance.region.rds.amazonaws.com:5432/dbname
+
+# Ejecutar migrations en nueva DB
+npm run migration:run
+```
 
 ---
 

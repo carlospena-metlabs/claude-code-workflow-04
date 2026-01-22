@@ -177,11 +177,11 @@ For each version:
 | Layer | Technology | Purpose |
 |-------|------------|---------|
 | Backend API | NestJS (TypeScript) | REST API, business logic, auth |
-| Database | PostgreSQL (AWS RDS) | ACID transactions, JSONB support |
+| Database | PostgreSQL (Supabase MVP → AWS RDS prod) | ACID transactions, JSONB support |
 | Web Frontend | React.js (TypeScript) | Admin backoffice SPA |
 | Mobile Frontend | React Native (TypeScript) | iOS/Android app |
 | Blockchain | Solidity + Hardhat | Smart contracts |
-| Infrastructure | AWS (ECS, SQS, KMS) | Cloud deployment |
+| Infrastructure | Supabase MVP → AWS (ECS, SQS, KMS) prod | Cloud deployment |
 | Email | AWS SES or Resend | Transactional emails |
 | Testing | Jest + Playwright | Unit and E2E tests |
 
