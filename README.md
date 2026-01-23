@@ -33,18 +33,20 @@ La migración es solo cambiar `DATABASE_URL` - TypeORM funciona igual con ambos.
 └─────────────────────────────────┬───────────────────────────────────────┘
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  2. /projectSpec/firstStep-spec                                         │
-│     Orquesta: media-interpreter → srs-to-spec                           │
-│     Genera:                                                             │
-│       - .claude/docs/projectSpec/projectSpec.md                         │
-│       - .claude/docs/pages-tree.md (Web + Mobile)                       │
-│       - CLAUDE.md                                                       │
-│       - .env.example                                                    │
+│  2. Crear pages-tree.md (MANUAL)                                        │
+│     Definir estructura de páginas/screens en .claude/docs/pages-tree.md │
+│     Usar template: .claude/docs/pages-tree.template.md                  │
+│     Incluir URLs de Figma si están disponibles                          │
 └─────────────────────────────────┬───────────────────────────────────────┘
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  3. Añadir URLs de Figma                                                │
-│     Editar pages-tree.md y reemplazar [FIGMA_URL] con URLs reales       │
+│  3. /projectSpec/firstStep-spec                                         │
+│     Orquesta: media-interpreter → srs-to-spec                           │
+│     Lee: pages-tree.md (estructura definida por ti)                     │
+│     Genera:                                                             │
+│       - .claude/docs/projectSpec/projectSpec.md (adaptado al pages-tree)│
+│       - CLAUDE.md                                                       │
+│       - .env.example                                                    │
 └─────────────────────────────────┬───────────────────────────────────────┘
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -54,7 +56,7 @@ La migración es solo cambiar `DATABASE_URL` - TypeORM funciona igual con ambos.
 └─────────────────────────────────┬───────────────────────────────────────┘
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  5. Ejecutar Sesiones por Fases                                         │
+│  5. Ejecutar Sesiones por Fases (o usar /todo/ralph)                    │
 │                                                                         │
 │     FASE 1: Backend + Web                                               │
 │     ├── Session 01: API Setup (NestJS)                                  │
@@ -106,11 +108,12 @@ La migración es solo cambiar `DATABASE_URL` - TypeORM funciona igual con ambos.
 │       └── qa.md             # Testing
 │
 ├── docs/
-│   ├── pdf/                  # Colocar aquí el SRS en PDF
+│   ├── pdf/                       # Colocar aquí el SRS en PDF
 │   ├── projectSpec/
-│   │   └── projectSpec.md    # Especificación técnica generada
-│   ├── design-tokens.json    # Tokens de diseño (fuente de verdad)
-│   └── pages-tree.md         # Árbol de páginas/screens con URLs de Figma
+│   │   └── projectSpec.md         # Especificación técnica generada
+│   ├── design-tokens.json         # Tokens de diseño (fuente de verdad)
+│   ├── pages-tree.template.md     # Template para crear pages-tree
+│   └── pages-tree.md              # TU árbol de páginas (crear manualmente)
 │
 └── sessions/                 # Sesiones de desarrollo generadas
     ├── session-01-api-setup.md
@@ -130,43 +133,20 @@ Coloca el documento SRS en formato PDF en:
 .claude/docs/pdf/mi-proyecto.pdf
 ```
 
-### Paso 2: Generar Especificación
+### Paso 2: Crear pages-tree.md (MANUAL)
 
-Ejecuta el comando:
+**Este paso es manual y obligatorio antes de generar la especificación.**
+
+Copia el template y personalízalo para tu proyecto:
+```bash
+cp .claude/docs/pages-tree.template.md .claude/docs/pages-tree.md
 ```
-/projectSpec/firstStep-spec
-```
 
-Este comando genera:
+Edita `.claude/docs/pages-tree.md` con la estructura de tu aplicación:
 
-| Archivo | Descripción |
-|---------|-------------|
-| `.claude/docs/projectSpec/projectSpec.md` | Especificación técnica completa |
-| `.claude/docs/pages-tree.md` | Árbol de páginas Web + screens Mobile |
-| `CLAUDE.md` | Resumen del proyecto para Claude |
-| `.env.example` | Variables de entorno por proyecto |
-
-### Paso 3: Añadir URLs de Figma
-
-Edita `.claude/docs/pages-tree.md` y reemplaza cada `[FIGMA_URL]`:
-
-**Antes:**
 ```markdown
-## Web Backoffice
+# Pages Tree
 
-### Dashboard (admin)
-├── /dashboard                     [FIGMA_URL]
-├── /dashboard/users               [FIGMA_URL]
-
-## Mobile App
-
-### Home (user)
-├── HomeScreen                     [FIGMA_URL]
-├── ProfileScreen                  [FIGMA_URL]
-```
-
-**Después:**
-```markdown
 ## Web Backoffice
 
 ### Dashboard (admin)
@@ -180,6 +160,29 @@ Edita `.claude/docs/pages-tree.md` y reemplaza cada `[FIGMA_URL]`:
 ├── ProfileScreen                  https://figma.com/design/xxx?node-id=20-200
 ```
 
+**Tips:**
+- Incluye URLs de Figma si ya las tienes (o usa `[FIGMA_URL]` como placeholder)
+- Agrupa páginas por área funcional y roles
+- Define tanto Web como Mobile si aplica
+
+### Paso 3: Generar Especificación
+
+Ejecuta el comando:
+```
+/projectSpec/firstStep-spec
+```
+
+Este comando:
+1. Verifica que `pages-tree.md` existe (si no, te pedirá crearlo)
+2. Analiza el SRS PDF
+3. Genera la especificación **adaptada a tu pages-tree**
+
+| Archivo | Descripción |
+|---------|-------------|
+| `.claude/docs/projectSpec/projectSpec.md` | Especificación técnica (adaptada al pages-tree) |
+| `CLAUDE.md` | Resumen del proyecto para Claude |
+| `.env.example` | Variables de entorno por proyecto |
+
 ### Paso 4: Generar Sesiones
 
 Ejecuta:
@@ -189,7 +192,7 @@ Ejecuta:
 
 ### Paso 5: Ejecutar Sesiones
 
-Ejecuta las sesiones en orden por fase.
+Ejecuta las sesiones en orden por fase (o usa `/todo/ralph` para automatizar).
 
 ---
 
@@ -443,6 +446,13 @@ Para cada feature:
 
 ## Troubleshooting
 
+### "El comando pide que cree pages-tree.md"
+Este archivo ahora es obligatorio y debes crearlo manualmente:
+```bash
+cp .claude/docs/pages-tree.template.md .claude/docs/pages-tree.md
+```
+Luego edítalo con la estructura de tu aplicación.
+
 ### "El ui-builder no encuentra el endpoint"
 Ejecuta primero la sesión del API module correspondiente.
 
@@ -452,7 +462,7 @@ Ejecuta primero la sesión del API module correspondiente.
 3. Verifica que Figma MCP esté configurado
 
 ### "sessions-maker genera placeholders"
-Olvidaste editar `pages-tree.md`. Reemplaza todos los `[FIGMA_URL]` antes de ejecutar.
+Revisa tu `pages-tree.md` y reemplaza los `[FIGMA_URL]` con URLs reales.
 
 ### "Error de tipos entre proyectos"
 Los tipos de API deben mantenerse sincronizados manualmente entre api y web/mobile.
@@ -514,6 +524,7 @@ npm run migration:run
 
 | Problema | Workaround |
 |----------|------------|
+| pages-tree.md no existe | Crearlo manualmente con el template antes de firstStep-spec |
 | URLs de Figma sin llenar | Revisar pages-tree.md antes de sessions-maker |
 | Tipos API desincronizados | Mantener types/ actualizado en todos los proyectos |
 | No hay rollback automático | Hacer commits de git entre sesiones |

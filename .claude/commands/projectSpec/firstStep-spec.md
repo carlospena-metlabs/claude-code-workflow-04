@@ -10,9 +10,20 @@ This workflow generates specifications for a **multi-project architecture**:
 
 ---
 
-## SRS Document Location
+## Input Files
 
-The SRS document must always be located at:
+### 1. pages-tree.md (MANDATORY - User Created)
+The user must create this file BEFORE running this command:
+```
+.claude/docs/pages-tree.md
+```
+
+This file defines the navigation structure and pages/screens the user wants. The projectSpec will adapt to this structure.
+
+**If pages-tree.md does not exist:** Stop and inform the user they must create it first following the format in `.claude/agents/srs-to-spec.md`.
+
+### 2. SRS Document (MANDATORY)
+The SRS document must be located at:
 ```
 .claude/docs/pdf/
 ```
@@ -22,9 +33,12 @@ Scan this directory and process any PDF file found. If multiple PDFs exist, proc
 
 ## Workflow
 
-1. **Locate and analyze the SRS document** from `.claude/docs/pdf/` using the `media-interpreter` agent to extract all requirements
-2. **Generate the projectSpec.md** following the structure defined in `srs-to-spec.md` agent guidelines
-3. **Create supporting files** once the specification is complete
+1. **Check for pages-tree.md** at `.claude/docs/pages-tree.md`
+   - If NOT found: Stop and instruct user to create it first
+   - If found: Read and analyze its structure
+2. **Locate and analyze the SRS document** from `.claude/docs/pdf/` using the `media-interpreter` agent to extract all requirements
+3. **Generate the projectSpec.md** following the structure defined in `srs-to-spec.md` agent guidelines, **adapting to the pages-tree.md structure**
+4. **Create supporting files** once the specification is complete
 
 ---
 
@@ -131,20 +145,14 @@ ETHERSCAN_API_KEY=your_etherscan_key
 
 ---
 
-### pages-tree.md (.claude/docs/)
-Create a `.claude/docs/pages-tree.md` file with:
-- Tree structure of all pages/screens grouped by area and auth requirements
-- Separate sections for Web Backoffice and Mobile App
-- Each page route with `[FIGMA_URL]` placeholder
-- Follow the format defined in `srs-to-spec.md` agent
-
 ---
 
 ## Execution Order
 
-1. First: Generate `.claude/docs/projectSpec/projectSpec.md`
-2. Second: Generate `.claude/docs/pages-tree.md`
-3. Finally: Generate `CLAUDE.md` and `.env.example` in project root
+1. **First:** Verify `.claude/docs/pages-tree.md` exists (user-created)
+   - If not found: STOP and inform the user to create it first
+2. **Second:** Generate `.claude/docs/projectSpec/projectSpec.md` (adapting to pages-tree)
+3. **Finally:** Generate `CLAUDE.md` and `.env.example` in project root
 
 Do not proceed to the next step until the previous is fully complete.
 
@@ -165,6 +173,5 @@ After generating the specification, the following agents are available for devel
 
 ## Next Steps After Specification
 
-1. User adds Figma URLs to `pages-tree.md`
-2. Run `/sessions-maker` to generate development sessions
-3. Execute sessions in order (Phase 1 first, then 2, then 3)
+1. Run `/sessions-maker` to generate development sessions
+2. Execute sessions in order (Phase 1 first, then 2, then 3)

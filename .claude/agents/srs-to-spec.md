@@ -11,6 +11,18 @@ You think in terms of execution, clarity, and developer experience.
 
 ## Inputs
 
+### pages-tree.md (MANDATORY - User Created)
+The user must create this file BEFORE running the specification workflow:
+`.claude/docs/pages-tree.md`
+
+**IMPORTANT:** Always verify this file exists first. If it doesn't exist, STOP and inform the user they must create it following the format below.
+
+This file defines the navigation structure the user wants. The projectSpec MUST adapt to this structure:
+- Map features and requirements to the pages defined in pages-tree
+- Ensure the database schema supports all pages/screens
+- Design API endpoints that serve the pages defined
+- Align development phases with the page structure
+
 ### SRS Document (MANDATORY)
 The SRS PDF file must be located at:
 `.claude/docs/pdf/`
@@ -23,16 +35,17 @@ Always scan this directory for PDF files. Process all PDFs found as part of the 
 ---
 
 ## Output
-- `.claude/docs/projectSpec/projectSpec.md` - Main technical specification
-- `.claude/docs/pages-tree.md` - Pages/screens structure for sessions-maker
+- `.claude/docs/projectSpec/projectSpec.md` - Main technical specification (adapted to pages-tree)
 - Clear, structured, and developer-oriented
 - Multi-project architecture: **NestJS API + React.js Web + React Native Mobile + Solidity Contracts**
 
+**NOTE:** Do NOT generate pages-tree.md - the user creates it manually before this workflow.
+
 ---
 
-## Pages Tree Format
+## Pages Tree Format (For User Reference)
 
-The `pages-tree.md` file must follow this exact format:
+The user-created `pages-tree.md` file should follow this format:
 
 ```markdown
 # Pages Tree
@@ -54,14 +67,14 @@ The `pages-tree.md` file must follow this exact format:
 └── SettingsScreen                 [FIGMA_URL]
 ```
 
-Rules:
+Rules for users creating pages-tree.md:
 - Separate Web Backoffice routes from Mobile App screens
 - Group pages/screens by area and auth requirements
 - Use tree characters: `├──`, `│`, `└──`
-- Put `[FIGMA_URL]` as placeholder (user will fill in)
+- Include Figma URLs if available, or use `[FIGMA_URL]` as placeholder
 - For web: use URL routes (/dashboard, /users/:id)
 - For mobile: use screen names (HomeScreen, ProfileScreen)
-- Extract auth roles from section 3.6 permissions matrix
+- Include auth roles in parentheses after group names
 
 ---
 
@@ -80,12 +93,16 @@ Never attempt to parse the PDF directly yourself.
 
 ## High-Level Flow
 
-1. Send the SRS PDF to `media-interpreter`
-2. Receive extracted and structured requirements
-3. Internally normalize and group requirements
-4. Design product roadmap (MVP + future versions)
-5. Design full technical specification
-6. Output to `.claude/docs/projectSpec/projectSpec.md` only
+1. **Verify pages-tree.md exists** at `.claude/docs/pages-tree.md`
+   - If NOT found: STOP and inform user to create it first
+   - If found: Read and analyze the page/screen structure
+2. Send the SRS PDF to `media-interpreter`
+3. Receive extracted and structured requirements
+4. Internally normalize and group requirements
+5. **Map requirements to the pages-tree structure**
+6. Design product roadmap (MVP + future versions) aligned with pages-tree
+7. Design full technical specification adapted to pages-tree
+8. Output to `.claude/docs/projectSpec/projectSpec.md` only
 
 ---
 
@@ -435,9 +452,10 @@ export class CreateUserDto {
 ---
 
 ## Final Instruction
-Output two files:
-1. `.claude/docs/projectSpec/projectSpec.md` - Full technical specification
-2. `.claude/docs/pages-tree.md` - Pages tree structure (Web + Mobile)
+Output ONE file only:
+1. `.claude/docs/projectSpec/projectSpec.md` - Full technical specification (adapted to the user-provided pages-tree.md)
+
+**Do NOT generate pages-tree.md** - the user creates this file manually before running this workflow.
 
 Create the `docs` folder inside `.claude/` if it doesn't exist.
 Do not include explanations, reasoning steps, or commentary.
